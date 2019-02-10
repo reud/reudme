@@ -65,7 +65,7 @@
             font-family: Impact, serif;
             position: absolute;
             font-size: 30px;
-            right: 25px;
+            right: 20px;
             bottom: 33px;
             text-align: center;
 
@@ -75,7 +75,7 @@
             font-family: Impact, serif;
             position: absolute;
             font-size: 15px;
-            right: 13px;
+            right: 8px;
             bottom: 18px;
             text-align: center;
 
@@ -84,11 +84,17 @@
         .name {
             font-family: 'Staatliches', cursive;
             position: absolute;
+        {% if username|length > 8 %}
+            font-size: 20px;
+        {% else %}
             font-size: 25px;
-            left: 15px;
+        {% endif %}
+
+            left: 2px;
             bottom: 35px;
+            width: 50px;
+            text-align: right;
             text-decoration: none;
-            text-align: center;
 
 
         }

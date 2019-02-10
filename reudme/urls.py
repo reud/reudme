@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', include('tests.urls')),
-    path('atcoder_badges/', include('tests.urls')),
+    path('AtCoder_badges/', include('atcoder_badges.urls')),
+    path('atcoder_badge_maker/',include('atcoder_badge_maker.urls'))
 ]
