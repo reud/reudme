@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        const request = new XMLHttpRequest();
+        request.open("GET", `https://kenkoooo.com/atcoder/atcoder-api/v2/user_info?user=reud`);
+        request.addEventListener("load", (event) => {
+            console.log(event.target.status); // => 200
+            console.log(event.target.responseText); // => "{...}"
+            var parsed=JSON.parse(event.target.responseText);
+            var accepted_count=document.getElementById("accepted_count");
+            var rank=document.getElementById("rank");
+            rank.innerText=parsed["accepted_count_rank"];
+            accepted_count.innerText=parsed["accepted_count"];
+
+        });
+        request.send();
+    </script>
+    <link rel="stylesheet" type="text/css" href="../../../static/badge.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Felipa|Staatliches');
+    </style>
+    <title>AtCoder Statuses</title>
+</head>
+<body>
+<div class="mybox">
+    <div class="header">
+        AtCoder Statuses
+    </div>
+    <div class="accepted_count" id="accepted_count"></div>
+    <div class="rank" id="rank"></div>
+    <div class="name"> reud </div>
+    <div class="accpted_text">Accepted</div>
+    <div class="rank_text">th</div>
+
+</div>
+
+</body>
+</html>
