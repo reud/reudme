@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
         const request = new XMLHttpRequest();
-        request.open("GET", `https://kenkoooo.com/atcoder/atcoder-api/v2/user_info?user=reud`);
+        request.open("GET", `https://kenkoooo.com/atcoder/atcoder-api/v2/user_info?user={{ username }}`);
         request.addEventListener("load", (event) => {
             console.log(event.target.status); // => 200
             console.log(event.target.responseText); // => "{...}"
@@ -100,7 +100,6 @@
             left: 18px;
             bottom: 20px;
             text-align: center;
-
         }
 
         .rank_text {
@@ -122,7 +121,7 @@
     </div>
     <div class="accepted_count" id="accepted_count"></div>
     <div class="rank" id="rank"></div>
-    <div class="name"><a href="https://atcoder.jp/users/reud" target="_blank"> reud</a></div>
+    <div class="name"><a href="https://atcoder.jp/users/{{ username }}" target="_blank"> {{ username }}</a></div>
     <div class="accpted_text">Accepted</div>
     <div class="rank_text">th</div>
 

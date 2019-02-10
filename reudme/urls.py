@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', include('tests.urls')),
+    path('atcoder_badges/', include('tests.urls')),
 ]
