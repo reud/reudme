@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="jp">
 <head>
@@ -19,9 +18,70 @@
         });
         request.send();
     </script>
-    <link rel="stylesheet" type="text/css" href="{% static 'badge.css' %}">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Felipa|Staatliches');
+    </style>
+    <style type="text/css">
+        .mybox {
+            width: 160px;
+            height: 100px;
+            background: none;
+            border: 1px solid #000000; /* 線の太さ・種類・色 */
+
+            position: relative;
+        }
+
+        .header {
+            font-family: 'Staatliches', cursive;
+            font-size: 14px;
+            position: relative;
+            border: 1px solid;
+            text-align: center;
+            width: 158px;
+            background-color: #FFFFFF;
+        }
+
+        .accepted_count {
+            font-family: Impact, serif;
+            position: absolute;
+            font-size: 30px;
+            right: 25px;
+            bottom: 33px;
+        }
+
+        .accpted_text {
+            font-family: Impact, serif;
+            position: absolute;
+            font-size: 15px;
+            right: 13px;
+            bottom: 18px;
+        }
+
+        .name {
+            font-family: 'Staatliches', cursive;
+            position: absolute;
+            font-size: 25px;
+            left: 15px;
+            bottom: 35px;
+
+        }
+
+        .rank {
+            font-family: Impact, serif;
+            position: absolute;
+            font-size: 12px;
+            left: 18px;
+            bottom: 20px;
+            text-align: right;
+        }
+
+        .rank_text {
+            font-family: Impact, serif;
+            position: absolute;
+            font-size: 12px;
+            left: 48px;
+            bottom: 20px;
+        }
     </style>
     <title>AtCoder Statuses</title>
 </head>
