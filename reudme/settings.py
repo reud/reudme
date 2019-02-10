@@ -30,6 +30,15 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
+if not DEBUG:
+    import django_heroku
+    django_heroku.settings(locals())
+
 ALLOWED_HOSTS = ["*"]
 
 
