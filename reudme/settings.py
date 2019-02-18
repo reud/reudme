@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tests.apps.TestsConfig',
+    'atcoder_badge_maker',
+    'atcoder_badges',
+    'homepage',
 ]
 
 MIDDLEWARE = [
