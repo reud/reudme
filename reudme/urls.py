@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', include('tests.urls')),
     path('AtCoder_badges/', include('atcoder_badges.urls')),
-    path('atcoder_badge_maker/',include('atcoder_badge_maker.urls')),
-    path('',include('homepage.urls')),
+    path('atcoder_badge_maker/', include('atcoder_badge_maker.urls')),
+    path('', include('homepage.urls')),
+    path('', include('ramiel.urls')),
 ]
