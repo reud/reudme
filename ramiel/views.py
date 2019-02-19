@@ -5,9 +5,13 @@ from linebot.models import (
     FollowEvent, TextSendMessage
 )
 import os
+from django.views.decorators.csrf import csrf_exempt
+
+
 line_bot_api = LineBotApi(channel_access_token=os.environ['CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(channel_secret=os.environ['CHANNEL_SECRET'])
 
+@csrf_exempt
 def callback(request):
     signature = request.META['HTTP_X_LINE_SIGNATURE']
     body = request.body.decode('utf-8')
