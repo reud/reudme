@@ -22,7 +22,7 @@ class Vocabulary(models.Model):
 
 class LINEUser(models.Model):
     username = models.CharField(max_length=30)
-    line_id = models.CharField(max_length=30)
+    line_id = models.CharField(max_length=100)
 
     def __str__(self):
         return self.username
