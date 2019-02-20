@@ -8,14 +8,13 @@ from linebot.models import (
     FollowEvent, TextSendMessage, MessageEvent, TextMessage
 )
 from socket import gethostname
-from ramiel import setting_local
 
 if 'charlotte.local' in gethostname():
-    import reudme.setting_local
+    from ramiel import setting_local
+
     line_bot_api = LineBotApi(channel_access_token=setting_local.CHANNEL_ACCESS_TOKEN)
     handler = WebhookHandler(channel_secret=setting_local.CHANNEL_SECRET)
 
-    SECRET_KEY = reudme.setting_local.SECRET_KEY
 else:
     line_bot_api = LineBotApi(channel_access_token=os.environ['CHANNEL_ACCESS_TOKEN'])
     handler = WebhookHandler(channel_secret=os.environ['CHANNEL_SECRET'])
