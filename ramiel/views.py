@@ -8,7 +8,7 @@ from linebot.models import (
     FollowEvent, TextSendMessage, MessageEvent, TextMessage
 )
 from socket import gethostname
-
+from ramiel.models import LINEUser
 if 'charlotte.local' in gethostname():
     from ramiel import setting_local
 
@@ -34,9 +34,11 @@ def callback(request):
 
 @handler.add(FollowEvent)
 def handle_follow(event):
+    profile = line_bot_api.get_profile(event.source.user_id)
+    LINEUser.objects.create(username=profile.display_name,line_id=profile.user_id)
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=f'こんにちはようこそ！{event}')
+        TextSendMessage(text=f'ようこそ！{profile.display_name}さん！')
     )
 
 

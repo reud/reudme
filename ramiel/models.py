@@ -5,7 +5,7 @@ from django.utils import timezone
 # Create your models here.
 class Vocabulary(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
-    author_line_id = models.CharField(max_length=30,null=True, blank=True)
+    author_line_id = models.CharField(max_length=30, null=True, blank=True)
     serif = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     use_time = models.DateTimeField()
@@ -18,3 +18,11 @@ class Vocabulary(models.Model):
 
     def __str__(self):
         return self.serif
+
+
+class LINEUser(models.Model):
+    username = models.CharField(max_length=30)
+    line_id = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.username
