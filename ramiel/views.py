@@ -3,6 +3,7 @@ import json
 import os
 import random
 from socket import gethostname
+
 import PyLineNotify
 import requests
 from django.http import HttpResponseForbidden, HttpResponse
@@ -22,17 +23,16 @@ if 'charlotte.local' in gethostname():
     line_bot_api = LineBotApi(channel_access_token=setting_local.CHANNEL_ACCESS_TOKEN)
     handler = WebhookHandler(channel_secret=setting_local.CHANNEL_SECRET)
     docomo_api_key = setting_local.DOCOMO_API_KEY
-    notifer=PyLineNotify.Notifer(notify_token=setting_local.LINE_NOTIFY_TOKEN)
+    notifer = PyLineNotify.Notifer(notify_token=setting_local.LINE_NOTIFY_TOKEN)
 else:
     line_bot_api = LineBotApi(channel_access_token=os.environ['CHANNEL_ACCESS_TOKEN'])
     handler = WebhookHandler(channel_secret=os.environ['CHANNEL_SECRET'])
     docomo_api_key = os.environ['DOCOMO_API_KEY']
-    notifer=PyLineNotify.Notifer(notify_token=os.environ['LINE_NOTIFY_TOKEN'])
-
+    notifer = PyLineNotify.Notifer(notify_token=os.environ['LINE_NOTIFY_TOKEN'])
 
 # docomo api setting
-docomo_api_url = f'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY={docomo_api_key}'
-docomo_api_headers = {'Content-type': 'application/json'}
+docomo_api_url = f'https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/?APIKEY={docomo_api_key}'
+docomo_api_headers = {'Content-type': 'application/json', 'charset': 'UTF-8'}
 
 
 @csrf_exempt
@@ -58,6 +58,11 @@ def handle_follow(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='DataBaseにあなたの名前がありません。友達追加をお手数ですが再度行って下さい。よろしくお願い致します。'))
+    return
+    
     profile = line_bot_api.get_profile(event.source.user_id)
     user_object = LINEUser.objects.filter(line_id=profile.user_id).first()
     if user_object:
@@ -65,6 +70,7 @@ def handle_message(event):
         if user_object.context_id:
             payload['context'] = user_object.context_id
 
+        # error point
         req = requests.post(docomo_api_url, data=json.dumps(payload), headers=docomo_api_headers)
         notifer.send_message(req)
         print(req)
