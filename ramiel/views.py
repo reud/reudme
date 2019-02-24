@@ -3,7 +3,7 @@ import json
 import os
 import random
 from socket import gethostname
-
+import PyLineNotify
 import requests
 from django.http import HttpResponseForbidden, HttpResponse
 from django.utils import timezone
@@ -22,10 +22,13 @@ if 'charlotte.local' in gethostname():
     line_bot_api = LineBotApi(channel_access_token=setting_local.CHANNEL_ACCESS_TOKEN)
     handler = WebhookHandler(channel_secret=setting_local.CHANNEL_SECRET)
     docomo_api_key = setting_local.DOCOMO_API_KEY
+    notifer=PyLineNotify.Notifer(notify_token=setting_local.LINE_NOTIFY_TOKEN)
 else:
     line_bot_api = LineBotApi(channel_access_token=os.environ['CHANNEL_ACCESS_TOKEN'])
     handler = WebhookHandler(channel_secret=os.environ['CHANNEL_SECRET'])
     docomo_api_key = os.environ['DOCOMO_API_KEY']
+    notifer=PyLineNotify.Notifer(notify_token=os.environ['LINE_NOTIFY_TOKEN'])
+
 
 # docomo api setting
 docomo_api_url = f'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY={docomo_api_key}'
@@ -63,6 +66,7 @@ def handle_message(event):
             payload['context'] = user_object.context_id
 
         req = requests.post(docomo_api_url, data=json.dumps(payload), headers=docomo_api_headers)
+        notifer.send_message(req)
         print(req)
         res = req.json()
         make_vocabulary(profile.user_id, res['utt'],
