@@ -63,6 +63,7 @@ def handle_message(event):
             payload['context'] = user_object.context_id
 
         req = requests.post(docomo_api_url, data=json.dumps(payload), headers=docomo_api_headers)
+        print(req)
         res = req.json()
         make_vocabulary(profile.user_id, res['utt'],
                         datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
