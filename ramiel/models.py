@@ -23,6 +23,7 @@ class Vocabulary(models.Model):
 class LINEUser(models.Model):
     username = models.CharField(max_length=30)
     line_id = models.CharField(max_length=100)
+    context_id=models.CharField(max_length=100,null=True,blank=True)
 
     def __str__(self):
         return self.username

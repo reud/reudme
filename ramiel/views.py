@@ -1,6 +1,10 @@
+import datetime
+import json
 import os
+import random
 from socket import gethostname
 
+import requests
 from django.http import HttpResponseForbidden, HttpResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -17,10 +21,15 @@ if 'charlotte.local' in gethostname():
 
     line_bot_api = LineBotApi(channel_access_token=setting_local.CHANNEL_ACCESS_TOKEN)
     handler = WebhookHandler(channel_secret=setting_local.CHANNEL_SECRET)
-
+    docomo_api_key = setting_local.DOCOMO_API_KEY
 else:
     line_bot_api = LineBotApi(channel_access_token=os.environ['CHANNEL_ACCESS_TOKEN'])
     handler = WebhookHandler(channel_secret=os.environ['CHANNEL_SECRET'])
+    docomo_api_key = os.environ['DOCOMO_API_KEY']
+
+# docomo api setting
+docomo_api_url = f'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY={docomo_api_key}'
+docomo_api_headers = {'Content-type': 'application/json'}
 
 
 @csrf_exempt
@@ -46,32 +55,53 @@ def handle_follow(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text))
+    profile = line_bot_api.get_profile(event.source.user_id)
+    user_object = LINEUser.objects.filter(line_id=profile.user_id).first()
+    if user_object:
+        payload = {'utt': event.message.text, 'context': ''}
+        if user_object.context_id:
+            payload['context'] = user_object.context_id
+
+        req = requests.post(docomo_api_url, data=json.dumps(payload), headers=docomo_api_headers)
+        res = req.json()
+        make_vocabulary(profile.user_id, res['utt'],
+                        datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
+        user_object.context_id = res['context']
+        user_object.save()
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text='DataBaseにあなたの名前がありません。友達追加をお手数ですが再度行って下さい。よろしくお願い致します。'))
 
 
 def push_message_from_model(request):
     objects = Vocabulary.objects.filter(use_time__lte=timezone.now()).filter(state='WAITING').order_by(
         'use_time').first()
     if objects:
-        post=objects
-        check=post.serif.split('\n')
+        post = objects
+        check = post.serif.split('\n')
         if '<tag>' in check[0]:
-            target=[check[0].replace('<tag>','')]
-            serifs=[check[i] for i in range(1,len(check))]
-            serif='\n'.join(serifs)
+            target = [check[0].replace('<tag>', '')]
+            serifs = [check[i] for i in range(1, len(check))]
+            serif = '\n'.join(serifs)
+        elif post.author_line_id:
+            target = [post.author_line_id]
+            serif = post.serif
         else:
-            target=[i.line_id for i in LINEUser.objects.all()]
-            serif=post.serif
-        messages = TextSendMessage(text=serif)
+            target = [i.line_id for i in LINEUser.objects.all()]
+            serif = post.serif
+        message = TextSendMessage(text=serif)
         for i in target:
             print(f'{i} to {serif}')
 
-            line_bot_api.push_message(i,messages=messages)
-        post.state='SENDED'
+            line_bot_api.push_message(i, messages=message)
+        post.state = 'SENDED'
         post.save()
 
     return HttpResponse('OK', status=200)
 
 
+def make_vocabulary(line_id: str, text: str, date_time: datetime.datetime):
+    vocab_object = Vocabulary.objects.create(author_line_id=line_id, serif=text, use_time=date_time,
+                                             state='WAITING')
+    vocab_object.save()
