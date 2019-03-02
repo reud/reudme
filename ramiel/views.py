@@ -51,7 +51,7 @@ def callback(request):
 def handle_follow(event):
     profile = line_bot_api.get_profile(event.source.user_id)
     payload = {'botId': "Chatting", 'appKind': 'ramiel_project'}
-    req = requests.post(docomo_communication_api_url, data=json.dumps(payload), headers=docomo_api_headers)
+    req = requests.post(docomo_user_register_api_url, data=json.dumps(payload), headers=docomo_api_headers)
     notifer.send_message(req)
     response = req.json()
     LINEUser.objects.create(username=profile.display_name, line_id=profile.user_id, app_id=response['appId'])
