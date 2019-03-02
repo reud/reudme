@@ -83,6 +83,7 @@ def handle_message(event):
         notifer.send_message(req)
         res = req.json()
         print(res)
+        notifer.send_message(res)
         make_vocabulary(line_id=profile.user_id, text=res['systemText']['expression'],
                         date_time=datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
         return
