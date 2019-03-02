@@ -76,7 +76,7 @@ def handle_message(event):
                        }
                    },
                    "appRecvTime": "2019-03-02 22:22:22",
-                   "appSendTime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                   "appSendTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                    }
         # error point
         req = requests.post(docomo_communication_api_url, data=json.dumps(payload), headers=docomo_api_headers)
