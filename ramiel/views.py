@@ -84,7 +84,7 @@ def handle_message(event):
         res = req.json()
         print(res)
         notifer.send_message(res)
-        make_vocabulary(line_id=profile.user_id, text=res['systemText']['expression'],
+        make_vocabulary(name=profile.display_name, line_id=profile.user_id, text=res['systemText']['expression'],
                         date_time=timezone.datetime.now() + timezone.timedelta(minutes=int(random.random() * 30)))
         return
     else:
@@ -120,7 +120,7 @@ def push_message_from_model(request):
     return HttpResponse('OK', status=200)
 
 
-def make_vocabulary(line_id: str, text: str, date_time: timezone.datetime):
+def make_vocabulary(name: str, line_id: str, text: str, date_time: timezone.datetime):
     vocab_object = Vocabulary.objects.create(author_line_id=line_id, serif=text, use_time=date_time,
                                              state='WAITING')
     vocab_object.save()
