@@ -81,9 +81,9 @@ def handle_message(event):
         # error point
         req = requests.post(docomo_communication_api_url, data=json.dumps(payload), headers=docomo_api_headers)
         notifer.send_message(req)
-        print(req)
-        return 
         res = req.json()
+        print(res)
+        return
         make_vocabulary(profile.user_id, res['systemText']['expression'],
                         datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
     else:
