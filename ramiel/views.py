@@ -121,6 +121,6 @@ def push_message_from_model(request):
 
 
 def make_vocabulary(name: str, line_id: str, text: str, date_time: timezone.datetime):
-    vocab_object = Vocabulary.objects.create(author_line_id=line_id, serif=text, use_time=date_time,
+    vocab_object = Vocabulary.objects.create(author=name,author_line_id=line_id, serif=text, use_time=date_time,
                                              state='WAITING')
     vocab_object.save()
