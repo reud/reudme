@@ -83,9 +83,9 @@ def handle_message(event):
         notifer.send_message(req)
         res = req.json()
         print(res)
+        make_vocabulary(line_id=profile.user_id, text=res['systemText']['expression'],
+                        date_time=datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
         return
-        make_vocabulary(profile.user_id, res['systemText']['expression'],
-                        datetime.datetime.now() + datetime.timedelta(minutes=int(random.random() * 30)))
     else:
         line_bot_api.reply_message(
             event.reply_token,
